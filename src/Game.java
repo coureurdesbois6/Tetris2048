@@ -139,7 +139,7 @@ public class Game {
                     StdDraw.filledSquare(i+3, 12-j, 0.5);
                 }
             }
-            //System.out.println("end of tick");
+            System.out.println("end of tick");
             //gameOver = true;
         }
     }
