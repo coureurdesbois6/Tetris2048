@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Game {
@@ -22,7 +23,7 @@ public class Game {
     private int currentX = WIDTH / 4;
     private int currentY = 0;
 
-    private int difficulty = 500;
+    private int difficulty = 30;
     private int tickCount = 0;
     private boolean forceDown = false;
     private boolean[] keys = new boolean[4]; //R,L,U,D
@@ -30,6 +31,7 @@ public class Game {
     public void start() {
         StdDraw.setXscale(0, 16);
         StdDraw.setYscale(0, 24);
+        StdDraw.enableDoubleBuffering();
         //StdDraw.setXscale(0, 8);
         //StdDraw.setYscale(0, 12);
 
@@ -44,9 +46,21 @@ public class Game {
             screen[i][12] = -1;
         }
 
+        for (int j = 0; j < HEIGHT+1; j++) {
+            for (int i = 0; i < WIDTH+2; i++) {
+                if (screen[i][j] == 0)
+                    StdDraw.setPenColor(Color.BLACK);
+                else if (screen[i][j] == 1)
+                    StdDraw.setPenColor(Color.RED);
+                else if (screen[i][j] == -1)
+                    StdDraw.setPenColor(Color.ORANGE);
+
+                StdDraw.filledSquare(i+3, 12-j, 0.5);
+            }
+        }
+
         while (!gameOver) {
-            long startTime = System.nanoTime() / 1000000;
-            long endTime = System.nanoTime() / 1000000;
+            StdDraw.clear();
             //INPUT
             for (int i = 0; i < 4; i++) {
                 keys[i] = StdDraw.isKeyPressed(sysKeys[i]);
@@ -62,11 +76,15 @@ public class Game {
 
 
             //TIME
-
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             //LOGIC
             //force down
-            if (tickCount == 1) {
+            if (tickCount == difficulty) {
                 tickCount = 0;
                 if (doesPieceFit(currentPiece, currentRotation, currentX, currentY + 1))
                     currentY += 1;
@@ -77,6 +95,33 @@ public class Game {
                             field[i][j] = screen[i][j];
                         }
                     }
+
+                    //check row clearances
+                    for (int i = 0; i < HEIGHT; i++) {
+                        boolean clearRow = true;
+
+                        for (int j = 1; j < WIDTH + 1; j++) {
+                            if (field[j][i] == 0)
+                                clearRow = false;
+                        }
+
+                        if (clearRow) {
+                            //clear the row
+                            for (int k = 1; k < WIDTH + 1; k++) {
+                                field[k][i] = 0;
+                            }
+
+                            /* bring everything above the
+                            cleared line one line down */
+                            for (int j = i-1; j >= 0; j--) {
+                                for (int k = 1; k < WIDTH+1; k++) {
+                                    field[k][j+1] = field[k][j];
+                                    field[k][j] = 0;
+                                }
+                            }
+                        }
+                    }
+
 
                     //reset
                     currentPiece = (currentPiece + 1) % 7;
@@ -139,7 +184,7 @@ public class Game {
                     StdDraw.filledSquare(i+3, 12-j, 0.5);
                 }
             }
-            System.out.println("end of tick");
+            StdDraw.show();
             //gameOver = true;
         }
     }
@@ -174,7 +219,10 @@ public class Game {
                 }
             }
         }
-
         return true;
+    }
+
+    private void merge(int x, int y, int mx, int my) {
+        //TODO
     }
 }
