@@ -5,8 +5,8 @@ import java.util.Scanner;
 
 public class Game {
 
-    private static final int WIDTH = 8;
-    private static final int HEIGHT = 12;
+    public static final int WIDTH = 8;
+    public static final int HEIGHT = 12;
     private static final String[] tetrominoes = {"0000011001100000",
             "0100010001000100", "0000001101100000",
             "0000110001100000", "0000010001000110",
@@ -58,9 +58,10 @@ public class Game {
                 StdDraw.filledSquare(i+3, 12-j, 0.5);
             }
         }
-
+        StdDraw.clear();
+        TetrisDrawer.drawBackground();
         while (!gameOver) {
-            StdDraw.clear();
+
             //INPUT
             for (int i = 0; i < 4; i++) {
                 keys[i] = StdDraw.isKeyPressed(sysKeys[i]);
@@ -172,6 +173,7 @@ public class Game {
 
             //DRAW
             //draw screen
+            /*
             for (int j = 0; j < HEIGHT+1; j++) {
                 for (int i = 0; i < WIDTH+2; i++) {
                     if (screen[i][j] == 0)
@@ -184,6 +186,8 @@ public class Game {
                     StdDraw.filledSquare(i+3, 12-j, 0.5);
                 }
             }
+            */
+            TetrisDrawer.drawGame(screen);
             StdDraw.show();
             //gameOver = true;
         }
