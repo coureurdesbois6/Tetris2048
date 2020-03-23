@@ -15,8 +15,8 @@ public class Game {
     private static final int[] sysKeys = {KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT, KeyEvent.VK_UP, KeyEvent.VK_DOWN};
 
     //2 for borders on the sides, 1 for border at the bottom
-    private int[][] field = new int[WIDTH+2][HEIGHT+1]; //holds game information, excluding current piece location
-    private int[][] screen = new int[WIDTH+2][HEIGHT+1]; //holds draw information
+    private int[][] field = new int[WIDTH + 2][HEIGHT + 1]; //holds game information, excluding current piece location
+    private int[][] screen = new int[WIDTH + 2][HEIGHT + 1]; //holds draw information
 
     private int currentPiece = 0;
     private int currentRotation = 0;
@@ -29,52 +29,29 @@ public class Game {
     private boolean[] keys = new boolean[4]; //R,L,U,D
 
     public void start() {
-        StdDraw.setXscale(0, 16);
-        StdDraw.setYscale(0, 24);
         StdDraw.enableDoubleBuffering();
-        //StdDraw.setXscale(0, 8);
-        //StdDraw.setYscale(0, 12);
+        StdDraw.clear();
+        TetrisDrawer.drawBackground();
 
-        for (int i = 0; i < HEIGHT+1; i++) {
+        for (int i = 0; i < HEIGHT + 1; i++) {
             field[0][i] = -1;
             field[9][i] = -1;
             screen[0][i] = -1;
             screen[9][i] = -1;
         }
-        for (int i = 1; i < WIDTH+1; i++) {
+
+        for (int i = 1; i < WIDTH + 1; i++) {
             field[i][12] = -1;
             screen[i][12] = -1;
         }
 
-        for (int j = 0; j < HEIGHT+1; j++) {
-            for (int i = 0; i < WIDTH+2; i++) {
-                if (screen[i][j] == 0)
-                    StdDraw.setPenColor(Color.BLACK);
-                else if (screen[i][j] == 1)
-                    StdDraw.setPenColor(Color.RED);
-                else if (screen[i][j] == -1)
-                    StdDraw.setPenColor(Color.ORANGE);
 
-                StdDraw.filledSquare(i+3, 12-j, 0.5);
-            }
-        }
-        StdDraw.clear();
-        TetrisDrawer.drawBackground();
         while (!gameOver) {
 
             //INPUT
             for (int i = 0; i < 4; i++) {
                 keys[i] = StdDraw.isKeyPressed(sysKeys[i]);
             }
-            //Test keys
-            /*
-            for (int i = 0; i < 4; i++) {
-                int x = keys[i] ? 1 : 0;
-                System.out.print(x);
-            }
-            System.out.println();
-             */
-
 
             //TIME
             try {
@@ -90,20 +67,23 @@ public class Game {
                 if (doesPieceFit(currentPiece, currentRotation, currentX, currentY + 1))
                     currentY += 1;
                 else {
-                    //paste screen onto field, inserting the piece
-                    for (int i = 1; i < WIDTH+1; i++) {
+                    //paste field onto screen, inserting the piece
+                    for (int i = 1; i < WIDTH + 1; i++) {
                         for (int j = 0; j < HEIGHT; j++) {
                             field[i][j] = screen[i][j];
                         }
                     }
+
 
                     //check row clearances
                     for (int i = 0; i < HEIGHT; i++) {
                         boolean clearRow = true;
 
                         for (int j = 1; j < WIDTH + 1; j++) {
-                            if (field[j][i] == 0)
+                            if (field[j][i] == 0) {
                                 clearRow = false;
+                                break;
+                            }
                         }
 
                         if (clearRow) {
@@ -114,15 +94,14 @@ public class Game {
 
                             /* bring everything above the
                             cleared line one line down */
-                            for (int j = i-1; j >= 0; j--) {
-                                for (int k = 1; k < WIDTH+1; k++) {
-                                    field[k][j+1] = field[k][j];
+                            for (int j = i - 1; j >= 0; j--) {
+                                for (int k = 1; k < WIDTH + 1; k++) {
+                                    field[k][j + 1] = field[k][j];
                                     field[k][j] = 0;
                                 }
                             }
                         }
                     }
-
 
                     //reset
                     currentPiece = (currentPiece + 1) % 7;
@@ -157,7 +136,7 @@ public class Game {
 
 
             //assign field to screen, ignore borders
-            for (int i = 1; i < WIDTH+1; i++) {
+            for (int i = 1; i < WIDTH + 1; i++) {
                 for (int j = 0; j < HEIGHT; j++) {
                     screen[i][j] = field[i][j];
                 }
@@ -170,33 +149,18 @@ public class Game {
                         screen[currentX + i][currentY + j] = 1;
                 }
             }
+            logic2048();
 
             //DRAW
-            //draw screen
-            /*
-            for (int j = 0; j < HEIGHT+1; j++) {
-                for (int i = 0; i < WIDTH+2; i++) {
-                    if (screen[i][j] == 0)
-                        StdDraw.setPenColor(Color.BLACK);
-                    else if (screen[i][j] == 1)
-                        StdDraw.setPenColor(Color.RED);
-                    else if (screen[i][j] == -1)
-                        StdDraw.setPenColor(Color.ORANGE);
-
-                    StdDraw.filledSquare(i+3, 12-j, 0.5);
-                }
-            }
-            */
             TetrisDrawer.drawGame(screen);
             StdDraw.show();
-            //gameOver = true;
         }
     }
 
     private int rotate(int x, int y, int rotation) {
         int result = 0;
 
-        switch (rotation%4) {
+        switch (rotation % 4) {
             case 0:
                 result = y * 4 + x;
                 break;
@@ -217,7 +181,7 @@ public class Game {
     private boolean doesPieceFit(int piece, int rotation, int x, int y) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (tetrominoes[piece].charAt(rotate(i, j, rotation)) == '1' && field[x+i][y+j] != 0) {
+                if (tetrominoes[piece].charAt(rotate(i, j, rotation)) == '1' && field[x + i][y + j] != 0) {
                     //System.out.println("doesnt fit");
                     return false;
                 }
@@ -226,7 +190,44 @@ public class Game {
         return true;
     }
 
-    private void merge(int x, int y, int mx, int my) {
-        //TODO
+
+    private void logic2048() {
+        for (int i = 1; i < WIDTH + 1; i++) {
+            for (int j = HEIGHT; j >= 0; j--) {
+                if (field[i][j] != 0) {
+                    for (int k = j + 1; k < HEIGHT; k++) {
+                        if (field[i][k] == 0) {
+                            continue;
+                        } else {
+                            if (field[i][k] == field[i][j]) {
+                                field[i][k] += 1;
+                                field[i][j] = 0;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int i = 1; i < WIDTH + 1; i++) {
+            for (int j = HEIGHT - 1; j >= 0; j--) {
+                int down = 0;
+                if (field[i][j] != 0) {
+                    for (int k = j + 1; k < HEIGHT; k++) {
+                        if (field[i][k] == 0)
+                            down++;
+                        else
+                            break;
+                    }
+
+                    if (down != 0) {
+                        field[i][j + down] = field[i][j];
+                        field[i][j] = 0;
+                    }
+                }
+            }
+        }
     }
 }

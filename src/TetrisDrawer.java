@@ -1,6 +1,20 @@
 import java.awt.*;
 
 public class TetrisDrawer {
+    private static Color[] colorLevel = {new Color(204, 195, 192),
+            new Color(235, 224, 203),
+            new Color(231, 177, 128),
+            new Color(232, 153, 108),
+            new Color(231, 131, 103),
+            new Color(229, 105, 70),
+            new Color(233, 207, 127),
+            new Color(232, 204, 114),
+            new Color(232, 200, 100),
+            new Color(231, 197, 88),
+            new Color(231, 195, 77)
+    };
+
+
     public static void drawBackground() {
         StdDraw.setCanvasSize(500,500);
         StdDraw.setXscale(0, 500);
@@ -38,22 +52,16 @@ public class TetrisDrawer {
                 double x = 6 + (double)(397/Game.WIDTH)*(0.5 + i);
                 double y = 6 + (double)(494/Game.HEIGHT)*(Game.HEIGHT-j-0.5);
 
-                StdDraw.setPenColor(180,170,160);
-                //StdDraw.filledRectangle(x,y,397.0/Game.WIDTH/2,494.0/Game.HEIGHT/2);
+                StdDraw.setPenColor(130,112,114);
+                StdDraw.filledRectangle(x,y,397.0/Game.WIDTH/2,494.0/Game.HEIGHT/2);
+                StdDraw.setPenColor(colorLevel[screen[i+1][j]]);
+                StdDraw.filledRectangle(x,y,397.0/Game.WIDTH/2.1,494.0/Game.HEIGHT/2.1);
 
-                if (screen[i+1][j] == 0) //blank
-                    StdDraw.setPenColor(Color.BLACK);
-                else if (screen[i+1][j] == 1) //squares
-                    StdDraw.setPenColor(Color.RED);
-                else if (screen[i+1][j] == -1) //borders
-                    StdDraw.setPenColor(Color.ORANGE);
+                //TODO: Make a better statement
+                if (screen[i+1][j] != 0)
+                    StdDraw.setPenColor(StdDraw.BLACK);
 
-                StdDraw.filledRectangle(x,y,397.0/Game.WIDTH/4,494.0/Game.HEIGHT/4);
-
-                StdDraw.setPenColor(StdDraw.BLUE);
-                //StdDraw.text(x,y, Integer.toString(screen[i+1][j]));
-
-
+                StdDraw.text(x,y, Integer.toString(2<<screen[i+1][j]-1));
             }
         }
     }
