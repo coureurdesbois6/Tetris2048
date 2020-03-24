@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
@@ -18,6 +19,10 @@ public class Game {
     private int[][] field = new int[WIDTH + 2][HEIGHT + 1]; //holds game information, excluding current piece location
     private int[][] screen = new int[WIDTH + 2][HEIGHT + 1]; //holds draw information
 
+    public int score = 0;
+
+    private String nextPieceStr = "0000000000000000";
+    private String currentPieceStr = "0000000000000000";
     private int currentPiece = 0;
     private int currentRotation = 0;
     private int currentX = WIDTH / 4;
@@ -33,6 +38,11 @@ public class Game {
         StdDraw.clear();
         TetrisDrawer.drawBackground();
 
+        currentPieceStr = shuffleTetromino(tetrominoes[currentPiece]);
+        nextPieceStr = tetrominoes[(currentPiece+1)%7];
+        nextPieceStr = shuffleTetromino(nextPieceStr);
+        TetrisDrawer.drawNext(nextPieceStr);
+
         for (int i = 0; i < HEIGHT + 1; i++) {
             field[0][i] = -1;
             field[9][i] = -1;
@@ -47,6 +57,8 @@ public class Game {
 
 
         while (!gameOver) {
+
+
 
             //INPUT
             for (int i = 0; i < 4; i++) {
@@ -73,6 +85,7 @@ public class Game {
                             field[i][j] = screen[i][j];
                         }
                     }
+                    logic2048();
 
 
                     //check row clearances
@@ -86,9 +99,11 @@ public class Game {
                             }
                         }
 
+
                         if (clearRow) {
-                            //clear the row
+                            //clear the row and add to score
                             for (int k = 1; k < WIDTH + 1; k++) {
+                                score += 2<<field[k][i]-1;
                                 field[k][i] = 0;
                             }
 
@@ -108,6 +123,10 @@ public class Game {
                     currentRotation = 0;
                     currentX = WIDTH / 4;
                     currentY = 0;
+                    currentPieceStr = nextPieceStr;
+                    nextPieceStr = tetrominoes[(currentPiece+1)%7];
+                    nextPieceStr = shuffleTetromino(nextPieceStr);
+                    TetrisDrawer.drawNext(nextPieceStr);
 
                     //game over if cant spawn new piece
                     if (!doesPieceFit(currentPiece, currentRotation, currentX, currentY)) {
@@ -143,18 +162,35 @@ public class Game {
             }
 
             //assign piece to screen
+            int val = 0;
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; j++) {
-                    if (tetrominoes[currentPiece].charAt(rotate(i, j, currentRotation)) == '1')
-                        screen[currentX + i][currentY + j] = 1;
+                    if (tetrominoes[currentPiece].charAt(rotate(i, j, currentRotation)) == '1') {
+                        val = currentPieceStr.charAt(rotate(i, j, currentRotation)) - '0';
+                        screen[currentX + i][currentY + j] = val;
+                    }
                 }
             }
-            logic2048();
-
             //DRAW
+            TetrisDrawer.drawScore(score);
             TetrisDrawer.drawGame(screen);
             StdDraw.show();
         }
+    }
+
+    private String shuffleTetromino(String next) {
+        Random rd = new Random();
+        char[] arr = next.toCharArray();
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (arr[4*j + i] == '1'){
+                    if (rd.nextBoolean()) {
+                        arr[4*j + i] = '2';
+                    }
+                }
+            }
+        }
+        return String.valueOf(arr);
     }
 
     private int rotate(int x, int y, int rotation) {
@@ -181,7 +217,7 @@ public class Game {
     private boolean doesPieceFit(int piece, int rotation, int x, int y) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (tetrominoes[piece].charAt(rotate(i, j, rotation)) == '1' && field[x + i][y + j] != 0) {
+                if (tetrominoes[piece].charAt(rotate(i, j, rotation)) != '0' && field[x + i][y + j] != 0) {
                     //System.out.println("doesnt fit");
                     return false;
                 }
@@ -195,16 +231,13 @@ public class Game {
         for (int i = 1; i < WIDTH + 1; i++) {
             for (int j = HEIGHT; j >= 0; j--) {
                 if (field[i][j] != 0) {
-                    for (int k = j + 1; k < HEIGHT; k++) {
-                        if (field[i][k] == 0) {
-                            continue;
+                    for (int k = j - 1; k >=0; k--) {
+                        if (field[i][k] == field[i][j]) {
+                            field[i][j] += 1;
+                            score += 2<<field[i][j]-1;
+                            field[i][k] = 0;
                         } else {
-                            if (field[i][k] == field[i][j]) {
-                                field[i][k] += 1;
-                                field[i][j] = 0;
-                            } else {
-                                break;
-                            }
+                            break;
                         }
                     }
                 }
