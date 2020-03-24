@@ -106,4 +106,25 @@ public class TetrisDrawer {
         StdDraw.setPenColor(Color.white);
         StdDraw.text(449, 435, String.valueOf(score));
     }
+
+    public static void drawSplashScreen(int score) {
+        StdDraw.setPenColor(210,105,30);
+        StdDraw.filledRectangle(250,250,110,110);
+
+        //Try again button
+        StdDraw.setPenColor(105, 30, 210);
+        StdDraw.filledRectangle(250,220,70,14);
+
+        //Quit button
+        StdDraw.setPenColor(105, 30, 210);
+        StdDraw.filledRectangle(250,180,70,14);
+
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.setFont(font);
+        StdDraw.text(250, 300, "Game over!");
+        String str = "You scored:" + score;
+        StdDraw.text(250,270, str);
+        StdDraw.text(250,220, "Try again: Enter");
+        StdDraw.text(250,180, "Quit: Escape");
+    }
 }

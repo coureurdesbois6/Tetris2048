@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.security.Key;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
@@ -13,11 +14,11 @@ public class Game {
             "0000110001100000", "0000010001000110",
             "0000001000100110", "0000011100100000"}; //4x4
     private static boolean gameOver = false;
-    private static final int[] sysKeys = {KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT, KeyEvent.VK_UP, KeyEvent.VK_DOWN};
+    private static final int[] sysKeys = {KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_ENTER, KeyEvent.VK_ESCAPE};
 
     //2 for borders on the sides, 1 for border at the bottom
-    private int[][] field = new int[WIDTH + 2][HEIGHT + 1]; //holds game information, excluding current piece location
-    private int[][] screen = new int[WIDTH + 2][HEIGHT + 1]; //holds draw information
+    private int[][] field; //holds game information, excluding current piece location
+    private int[][] screen; //holds draw information
 
     public int score = 0;
 
@@ -30,7 +31,6 @@ public class Game {
 
     private int difficulty = 30;
     private int tickCount = 0;
-    private boolean forceDown = false;
     private boolean[] keys = new boolean[4]; //R,L,U,D
 
     public void start() {
@@ -42,6 +42,14 @@ public class Game {
         nextPieceStr = tetrominoes[(currentPiece+1)%7];
         nextPieceStr = shuffleTetromino(nextPieceStr);
         TetrisDrawer.drawNext(nextPieceStr);
+
+        score = 0;
+        currentPiece = 0;
+        currentRotation = 0;
+        currentX = WIDTH / 4;
+        currentY = 0;
+        field = new int[WIDTH + 2][HEIGHT + 1];
+        screen = new int[WIDTH + 2][HEIGHT + 1];
 
         for (int i = 0; i < HEIGHT + 1; i++) {
             field[0][i] = -1;
@@ -57,9 +65,6 @@ public class Game {
 
 
         while (!gameOver) {
-
-
-
             //INPUT
             for (int i = 0; i < 4; i++) {
                 keys[i] = StdDraw.isKeyPressed(sysKeys[i]);
@@ -147,8 +152,6 @@ public class Game {
             if (keys[2]) //UP (ROTATE)
                 if (doesPieceFit(currentPiece, currentRotation + 1, currentX, currentY))
                     currentRotation += 1;
-            //if (doesPieceFit(currentPiece, currentRotation, currentX, currentY - 1))
-            //currentY -= 1;
             if (keys[3]) //DOWN
                 if (doesPieceFit(currentPiece, currentRotation, currentX, currentY + 1))
                     currentY += 1;
@@ -175,6 +178,19 @@ public class Game {
             TetrisDrawer.drawScore(score);
             TetrisDrawer.drawGame(screen);
             StdDraw.show();
+        }
+
+        TetrisDrawer.drawSplashScreen(score);
+        StdDraw.show();
+
+        while(true) {
+            if (StdDraw.isKeyPressed(sysKeys[4])) {
+                gameOver = false;
+                this.start();
+            } else if (StdDraw.isKeyPressed(sysKeys[5])) {
+                System.exit(0);
+                break;
+            }
         }
     }
 
