@@ -236,7 +236,8 @@ public class Game {
                             field[i][j] += 1;
                             score += 2<<field[i][j]-1;
                             field[i][k] = 0;
-                        } else {
+                            j=HEIGHT;
+                        } else if (field[i][k] != 0){
                             break;
                         }
                     }
