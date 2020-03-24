@@ -6,17 +6,19 @@ public class TetrisDrawer {
     private static Font fontSmaller = new Font("Arial", Font.BOLD, 8);
 
 
-    private static Color[] colorLevel = {new Color(204, 195, 192),
-            new Color(235, 224, 203),
-            new Color(231, 177, 128),
-            new Color(232, 153, 108),
-            new Color(231, 131, 103),
-            new Color(229, 105, 70),
-            new Color(233, 207, 127),
-            new Color(232, 204, 114),
-            new Color(232, 200, 100),
-            new Color(231, 197, 88),
-            new Color(231, 195, 77)
+    private static Color[] colorLevel = {
+            new Color(204,195,182), //0
+            new Color(237, 228, 219), //2
+            new Color(235,224,203), //4
+            new Color(233,179,129), //8
+            new Color(232, 153, 108), //16
+            new Color(231, 131, 103), //32
+            new Color(229,105,70), //64
+            new Color(233,207,127), //128
+            new Color(232,204,114), //256
+            new Color(232,200,100),//512
+            new Color(231,195,77), //1024
+            new Color(231,197,88) //2048
     };
 
 
@@ -48,12 +50,6 @@ public class TetrisDrawer {
         StdDraw.setPenColor(Color.WHITE);
         StdDraw.text(449, 465,"SCORE");
         StdDraw.text(449, 120,"NEXT");
-
-
-
-        //while(true)
-        //    System.out.println(StdDraw.mouseX() + " " + StdDraw.mouseY());
-
     }
 
     public static void drawNext(String nextTetromino) {
