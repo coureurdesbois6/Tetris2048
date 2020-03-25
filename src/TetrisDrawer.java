@@ -52,24 +52,23 @@ public class TetrisDrawer {
         StdDraw.text(449, 120,"NEXT");
     }
 
-    public static void drawNext(String nextTetromino) {
+    public static void drawNext(int[] nextTetromino) {
         StdDraw.setPenColor(166, 160, 152);
         StdDraw.filledRectangle(449, 70, 40,35);
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                char currentChar = nextTetromino.charAt(4 * j + i);
-                if (currentChar != '0') {
-                    int currentValue = Integer.parseInt(Character.toString(currentChar));
+                int val = nextTetromino[4 * j + i];
+                if (val != 0) {
                     double x = 430+(12*i);
                     double y = 86-(12*j);
                     StdDraw.setPenColor(130,112,114);
                     StdDraw.filledRectangle(x, y,6,6);
-                    StdDraw.setPenColor(colorLevel[currentValue]);
+                    StdDraw.setPenColor(colorLevel[val]);
                     StdDraw.filledRectangle(x, y,5.6,5.6);
                     StdDraw.setFont(fontSmaller);
                     StdDraw.setPenColor(StdDraw.BLACK);
-                    StdDraw.text(x,y, Integer.toString(2<<currentValue-1));
+                    StdDraw.text(x,y, Integer.toString(2<<val-1));
                 }
             }
         }

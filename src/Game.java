@@ -1,17 +1,20 @@
-import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
 import java.util.Random;
-import java.util.Scanner;
 
 public class Game {
 
     public static final int WIDTH = 8;
     public static final int HEIGHT = 12;
+    /*
     private static final String[] tetrominoes = {"0000011001100000",
             "0100010001000100", "0000001101100000",
             "0000110001100000", "0000010001000110",
             "0000001000100110", "0000011100100000"}; //4x4
+            */
+    private static final int[][] tetrominoes = {{0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0},
+            {0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0}, {0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0},
+            {0,0,0,0,1,1,0,0,0,1,1,0,0,0,0,0}, {0,0,0,0,0,1,0,0,0,1,0,0,0,1,1,0},
+            {0,0,0,0,0,0,1,0,0,0,1,0,0,1,1,0}, {0,0,0,0,0,1,1,1,0,0,1,0,0,0,0,0}};
     private static boolean gameOver = false;
     private static final int[] sysKeys = {KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT, KeyEvent.VK_UP, KeyEvent.VK_DOWN};
 
@@ -21,8 +24,8 @@ public class Game {
 
     public int score = 0;
 
-    private String nextPieceStr = "0000000000000000";
-    private String currentPieceStr = "0000000000000000";
+    private int[] nextPieceArr = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    private int[] currentPieceArr = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     private int currentPiece = 0;
     private int currentRotation = 0;
     private int currentX = WIDTH / 4;
@@ -38,10 +41,10 @@ public class Game {
         StdDraw.clear();
         TetrisDrawer.drawBackground();
 
-        currentPieceStr = shuffleTetromino(tetrominoes[currentPiece]);
-        nextPieceStr = tetrominoes[(currentPiece+1)%7];
-        nextPieceStr = shuffleTetromino(nextPieceStr);
-        TetrisDrawer.drawNext(nextPieceStr);
+        currentPieceArr = shuffleTetromino(tetrominoes[currentPiece]);
+        nextPieceArr = tetrominoes[(currentPiece+1)%7];
+        nextPieceArr = shuffleTetromino(nextPieceArr);
+        TetrisDrawer.drawNext(nextPieceArr);
 
         for (int i = 0; i < HEIGHT + 1; i++) {
             field[0][i] = -1;
@@ -123,10 +126,10 @@ public class Game {
                     currentRotation = 0;
                     currentX = WIDTH / 4;
                     currentY = 0;
-                    currentPieceStr = nextPieceStr;
-                    nextPieceStr = tetrominoes[(currentPiece+1)%7];
-                    nextPieceStr = shuffleTetromino(nextPieceStr);
-                    TetrisDrawer.drawNext(nextPieceStr);
+                    currentPieceArr = nextPieceArr;
+                    nextPieceArr = tetrominoes[(currentPiece+1)%7];
+                    nextPieceArr = shuffleTetromino(nextPieceArr);
+                    TetrisDrawer.drawNext(nextPieceArr);
 
                     //game over if cant spawn new piece
                     if (!doesPieceFit(currentPiece, currentRotation, currentX, currentY)) {
@@ -161,16 +164,18 @@ public class Game {
                 }
             }
 
+
             //assign piece to screen
             int val = 0;
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; j++) {
-                    if (tetrominoes[currentPiece].charAt(rotate(i, j, currentRotation)) == '1') {
-                        val = currentPieceStr.charAt(rotate(i, j, currentRotation)) - '0';
+                    if (tetrominoes[currentPiece][rotate(i, j, currentRotation)] != 0) {
+                        val = currentPieceArr[rotate(i, j, currentRotation)];
                         screen[currentX + i][currentY + j] = val;
                     }
                 }
             }
+
             //DRAW
             TetrisDrawer.drawScore(score);
             TetrisDrawer.drawGame(screen);
@@ -178,19 +183,18 @@ public class Game {
         }
     }
 
-    private String shuffleTetromino(String next) {
+    private int[] shuffleTetromino(int[] next) {
         Random rd = new Random();
-        char[] arr = next.toCharArray();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (arr[4*j + i] == '1'){
+                if (next[4*j + i] == 1){
                     if (rd.nextBoolean()) {
-                        arr[4*j + i] = '2';
+                        next[4*j + i] = 2;
                     }
                 }
             }
         }
-        return String.valueOf(arr);
+        return next;
     }
 
     private int rotate(int x, int y, int rotation) {
@@ -217,7 +221,7 @@ public class Game {
     private boolean doesPieceFit(int piece, int rotation, int x, int y) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (tetrominoes[piece].charAt(rotate(i, j, rotation)) != '0' && field[x + i][y + j] != 0) {
+                if (tetrominoes[piece][rotate(i, j, rotation)] != 0 && field[x + i][y + j] != 0) {
                     //System.out.println("doesnt fit");
                     return false;
                 }
