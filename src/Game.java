@@ -36,7 +36,7 @@ public class Game {
         StdDraw.clear();
         TetrisDrawer.drawBackground();
 
-        int randomNext = (currentPiece + 1 + (int) (Math.random()*7)) % 7;
+        int randomNext = (currentPiece + 1 + (int) (Math.random()*6)) % 7;
         currentPieceArr = shuffleTetromino(tetrominoes[currentPiece]);
         nextPieceArr = tetrominoes[randomNext];
         nextPieceArr = shuffleTetromino(nextPieceArr);
@@ -122,7 +122,7 @@ public class Game {
                     currentX = WIDTH / 4;
                     currentY = 0;
                     currentPieceArr = nextPieceArr;
-                    randomNext = (currentPiece + 1 + (int) (Math.random()*7)) % 7;
+                    randomNext = (currentPiece + 1 + (int) (Math.random()*6)) % 7;
                     nextPieceArr = tetrominoes[randomNext];
                     nextPieceArr = shuffleTetromino(nextPieceArr);
                     TetrisDrawer.drawNext(nextPieceArr);
