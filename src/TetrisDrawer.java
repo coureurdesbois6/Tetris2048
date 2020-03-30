@@ -77,21 +77,21 @@ public class TetrisDrawer {
 
     public static void drawGame(int[][] screen) {
         StdDraw.setFont(font);
-        for (int i = 0; i < Game.WIDTH; i++){
+        for (int i = 1; i < Game.WIDTH+1; i++){
             for (int j = 0; j < Game.HEIGHT; j++){
-                double x = 6 + (double)(397/Game.WIDTH)*(0.5 + i);
+                double x = 6 + (double)(397/Game.WIDTH)*(i - 0.5);
                 double y = 6 + (double)(494/Game.HEIGHT)*(Game.HEIGHT-j-0.5);
 
                 StdDraw.setPenColor(130,112,114);
                 StdDraw.filledRectangle(x,y,397.0/Game.WIDTH/2,494.0/Game.HEIGHT/2);
-                StdDraw.setPenColor(colorLevel[screen[i+1][j]]);
+                StdDraw.setPenColor(colorLevel[screen[i][j]]);
                 StdDraw.filledRectangle(x,y,397.0/Game.WIDTH/2.1,494.0/Game.HEIGHT/2.1);
 
                 //TODO: Make a better statement
-                if (screen[i+1][j] != 0)
+                if (screen[i][j] != 0)
                     StdDraw.setPenColor(StdDraw.BLACK);
 
-                StdDraw.text(x,y, Integer.toString(2<<screen[i+1][j]-1));
+                StdDraw.text(x,y, Integer.toString(2<<screen[i][j]-1));
             }
         }
     }

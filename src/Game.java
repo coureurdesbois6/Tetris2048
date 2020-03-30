@@ -5,12 +5,6 @@ public class Game {
 
     public static final int WIDTH = 8;
     public static final int HEIGHT = 12;
-    /*
-    private static final String[] tetrominoes = {"0000011001100000",
-            "0100010001000100", "0000001101100000",
-            "0000110001100000", "0000010001000110",
-            "0000001000100110", "0000011100100000"}; //4x4
-            */
     private static final int[][] tetrominoes = {{0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0},
             {0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0}, {0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0},
             {0,0,0,0,1,1,0,0,0,1,1,0,0,0,0,0}, {0,0,0,0,0,1,0,0,0,1,0,0,0,1,1,0},
@@ -48,14 +42,14 @@ public class Game {
 
         for (int i = 0; i < HEIGHT + 1; i++) {
             field[0][i] = -1;
-            field[9][i] = -1;
+            field[WIDTH+1][i] = -1;
             screen[0][i] = -1;
-            screen[9][i] = -1;
+            screen[WIDTH+1][i] = -1;
         }
 
         for (int i = 1; i < WIDTH + 1; i++) {
-            field[i][12] = -1;
-            screen[i][12] = -1;
+            field[i][HEIGHT] = -1;
+            screen[i][HEIGHT] = -1;
         }
 
 
