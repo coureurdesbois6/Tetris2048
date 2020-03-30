@@ -27,6 +27,7 @@ public class Game {
 
     private int difficulty = 30;
     private int tickCount = 0;
+    private boolean rotateHold = false;
     private boolean forceDown = false;
     private boolean[] keys = new boolean[4]; //R,L,U,D
 
@@ -35,8 +36,9 @@ public class Game {
         StdDraw.clear();
         TetrisDrawer.drawBackground();
 
+        int randomNext = (currentPiece + 1 + (int) (Math.random()*7)) % 7;
         currentPieceArr = shuffleTetromino(tetrominoes[currentPiece]);
-        nextPieceArr = tetrominoes[(currentPiece+1)%7];
+        nextPieceArr = tetrominoes[randomNext];
         nextPieceArr = shuffleTetromino(nextPieceArr);
         TetrisDrawer.drawNext(nextPieceArr);
 
@@ -54,7 +56,6 @@ public class Game {
 
 
         while (!gameOver) {
-
 
 
             //INPUT
@@ -116,12 +117,13 @@ public class Game {
                     }
 
                     //reset
-                    currentPiece = (currentPiece + 1) % 7;
+                    currentPiece = randomNext;
                     currentRotation = 0;
                     currentX = WIDTH / 4;
                     currentY = 0;
                     currentPieceArr = nextPieceArr;
-                    nextPieceArr = tetrominoes[(currentPiece+1)%7];
+                    randomNext = (currentPiece + 1 + (int) (Math.random()*7)) % 7;
+                    nextPieceArr = tetrominoes[randomNext];
                     nextPieceArr = shuffleTetromino(nextPieceArr);
                     TetrisDrawer.drawNext(nextPieceArr);
 
@@ -142,10 +144,12 @@ public class Game {
                 if (doesPieceFit(currentPiece, currentRotation, currentX - 1, currentY))
                     currentX -= 1;
             if (keys[2]) //UP (ROTATE)
-                if (doesPieceFit(currentPiece, currentRotation + 1, currentX, currentY))
+                if (!rotateHold && doesPieceFit(currentPiece, currentRotation + 1, currentX, currentY)) {
                     currentRotation += 1;
-            //if (doesPieceFit(currentPiece, currentRotation, currentX, currentY - 1))
-            //currentY -= 1;
+                    rotateHold = true;
+                } else {
+                    rotateHold = false;
+                }
             if (keys[3]) //DOWN
                 if (doesPieceFit(currentPiece, currentRotation, currentX, currentY + 1))
                     currentY += 1;
