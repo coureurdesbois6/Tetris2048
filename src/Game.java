@@ -28,7 +28,6 @@ public class Game {
     private int difficulty = 30;
     private int tickCount = 0;
     private boolean rotateHold = false;
-    private boolean forceDown = false;
     private boolean[] keys = new boolean[4]; //R,L,U,D
 
     public void start() {
