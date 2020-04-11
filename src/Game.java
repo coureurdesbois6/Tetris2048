@@ -10,7 +10,7 @@ public class Game {
             {0,0,0,0,1,1,0,0,0,1,1,0,0,0,0,0}, {0,0,0,0,0,1,0,0,0,1,0,0,0,1,1,0},
             {0,0,0,0,0,0,1,0,0,0,1,0,0,1,1,0}, {0,0,0,0,0,1,1,1,0,0,1,0,0,0,0,0}};
     private static boolean gameOver = false;
-    private static final int[] sysKeys = {KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT, KeyEvent.VK_UP, KeyEvent.VK_DOWN};
+    private static final int[] sysKeys = {KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_ENTER, KeyEvent.VK_ESCAPE};
 
     //2 for borders on the sides, 1 for border at the bottom
     private int[][] field = new int[WIDTH + 2][HEIGHT + 1]; //holds game information, excluding current piece location
@@ -25,10 +25,10 @@ public class Game {
     private int currentX = WIDTH / 4;
     private int currentY = 0;
 
-    private int difficulty = 30;
+    private int difficulty = 30; //Unused difficulty variable
     private int tickCount = 0;
     private boolean rotateHold = false;
-    private boolean[] keys = new boolean[4]; //R,L,U,D
+    private boolean[] keys = new boolean[sysKeys.length]; //R,L,U,D, Enter, Escape
 
     public void start() {
         StdDraw.enableDoubleBuffering();
@@ -177,6 +177,23 @@ public class Game {
             TetrisDrawer.drawScore(score);
             TetrisDrawer.drawGame(screen);
             StdDraw.show();
+        }
+
+
+        TetrisDrawer.drawSplashScreen(score);
+        StdDraw.show();
+
+        while(true) {
+            if (StdDraw.isKeyPressed(sysKeys[4])) {
+                gameOver = false;
+                field = new int[WIDTH + 2][HEIGHT + 1];
+                screen = new int[WIDTH + 2][HEIGHT + 1];
+                score = 0;
+                this.start();
+            } else if (StdDraw.isKeyPressed(sysKeys[5])) {
+                System.exit(0);
+                break;
+            }
         }
     }
 
