@@ -53,8 +53,8 @@ public class Game {
 
         //Ready the initial tetromino and the next one
         int randomNext = (currentPiece + 1 + (int) (Math.random()*6)) % 7;
-        currentPieceArr = shuffleTetromino(tetrominoes[currentPiece]);
-        nextPieceArr = tetrominoes[randomNext];
+        currentPieceArr = shuffleTetromino(tetrominoes[currentPiece].clone());
+        nextPieceArr = tetrominoes[randomNext].clone();
         nextPieceArr = shuffleTetromino(nextPieceArr);
         TetrisDrawer.drawNext(nextPieceArr);
 
@@ -139,7 +139,7 @@ public class Game {
                     currentY = 0;
                     currentPieceArr = nextPieceArr;
                     randomNext = (currentPiece + 1 + (int) (Math.random()*6)) % 7;
-                    nextPieceArr = tetrominoes[randomNext];
+                    nextPieceArr = tetrominoes[randomNext].clone();
                     nextPieceArr = shuffleTetromino(nextPieceArr);
                     TetrisDrawer.drawNext(nextPieceArr);
 
