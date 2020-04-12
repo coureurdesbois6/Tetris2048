@@ -1,3 +1,12 @@
+/**
+ * Drawing class for tetris game, methods here
+ * are written to use in the Game class.
+ *
+ * @author  Yigit Sezer, Pinar Haskiris
+ * @version 1.0
+ * @since   2020-03-20
+ */
+
 import java.awt.*;
 
 public class TetrisDrawer {

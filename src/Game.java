@@ -1,3 +1,16 @@
+/**
+ * Tetris game with 2048 gameplay elements combined.
+ *
+ * CONTROLS:
+ * Use left, right and down arrow keys to move
+ * Up arrow key to rotate.
+ * Enter or Escape to either try again or quit after game over.
+ *
+ * @author  Yigit Sezer, Pinar Haskiris
+ * @version 1.0
+ * @since   2020-03-20
+ */
+
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
