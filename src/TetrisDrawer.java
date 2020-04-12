@@ -30,45 +30,41 @@ public class TetrisDrawer {
             new Color(231,197,88) //2048
     };
 
-    //Draws game background
+    //drawing the game background
     public static void drawBackground() {
         StdDraw.setCanvasSize(500,500);
         StdDraw.setXscale(0, 500);
         StdDraw.setYscale(0, 500);
 
-        StdDraw.setPenColor(StdDraw.DARK_GRAY);
-        StdDraw.filledRectangle(250, 0, 250, 6);
-        StdDraw.filledRectangle(250, 500, 250, 6);
-        StdDraw.filledRectangle(0, 250, 6, 250);
-        StdDraw.filledRectangle(500, 250, 6, 250);
-        StdDraw.filledRectangle(400,250,3,250);
+        //drawing the background
+        StdDraw.setPenColor(113, 103, 94);
+        StdDraw.filledRectangle(0,0,500,500);
 
-        //Game at 6,6 to 397, 494
-        //391x488 game size
-        StdDraw.setPenColor(StdDraw.BLACK);
-
-        //Grid background
+        //drawing the squares (grid)
         StdDraw.setPenColor(171, 155, 141);
         StdDraw.filledRectangle(201.5,250,195.5, 244);
 
-        //Sidebar
-        StdDraw.setPenColor(166, 160, 152);
+        //drawing the sidebar
+        StdDraw.setPenColor(150, 143, 132);
         StdDraw.filledRectangle(449, 250,46 ,244);
 
+        //adding next
         StdDraw.setFont(font);
         StdDraw.setPenColor(Color.WHITE);
         StdDraw.text(449, 465,"SCORE");
         StdDraw.text(449, 120,"NEXT");
     }
 
-    //Draws next tetromino piece
+    //drawing the next tetromino piece
     public static void drawNext(int[] nextTetromino) {
+
+        //delete where the next block is going to be -> paint with the same color of background
         StdDraw.setPenColor(166, 160, 152);
         StdDraw.filledRectangle(449, 70, 40,35);
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                int val = nextTetromino[4 * j + i];
+                int val = nextTetromino[4 * j + i]; //determining the value
                 if (val != 0) {
                     double x = 430+(12*i);
                     double y = 86-(12*j);
@@ -84,7 +80,7 @@ public class TetrisDrawer {
         }
     }
 
-    //Draws the game itself
+    //drawing the game itself
     public static void drawGame(int[][] screen) {
         StdDraw.setFont(font);
         for (int i = 1; i < Game.WIDTH+1; i++){
@@ -92,23 +88,23 @@ public class TetrisDrawer {
                 double x = 6 + (double)(397/Game.WIDTH)*(i - 0.5);
                 double y = 6 + (double)(494/Game.HEIGHT)*(Game.HEIGHT-j-0.5);
 
+                //drawing the background
                 StdDraw.setPenColor(130,112,114);
                 StdDraw.filledRectangle(x,y,397.0/Game.WIDTH/2,494.0/Game.HEIGHT/2);
                 StdDraw.setPenColor(colorLevel[screen[i][j]]);
                 StdDraw.filledRectangle(x,y,397.0/Game.WIDTH/2.1,494.0/Game.HEIGHT/2.1);
 
-                //TODO: Make a better statement
                 if (screen[i][j] != 0)
                     StdDraw.setPenColor(StdDraw.BLACK);
-
                 StdDraw.text(x,y, Integer.toString(2<<screen[i][j]-1));
             }
         }
     }
 
-    //Draws score
+    //drawing the score
     public static void drawScore(int score) {
-        //delete the old
+
+        //delete the old score
         StdDraw.setPenColor(166, 160, 152);
         StdDraw.filledRectangle(449, 435, 40,20);
 
@@ -117,7 +113,7 @@ public class TetrisDrawer {
         StdDraw.text(449, 435, String.valueOf(score));
     }
 
-    //Draws splash screen when game is over
+    //drawing the splash screen when game is over
     public static void drawSplashScreen(int score) {
         StdDraw.setPenColor(210,105,30);
         StdDraw.filledRectangle(250,250,110,110);

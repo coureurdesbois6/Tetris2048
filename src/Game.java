@@ -267,15 +267,19 @@ public class Game {
     //2048 logic, merges same numbers on top of each other
     //and forces every floating block to fall
     private void logic2048() {
+
+        //starting from top, merge if there is a block
+        //with the same value as current block without
+        //anything in between, ignore blank spaces.
         for (int i = 1; i < WIDTH + 1; i++) {
             for (int j = HEIGHT; j >= 0; j--) {
-                if (field[i][j] != 0) {
-                    for (int k = j - 1; k >=0; k--) {
+                if (field[i][j] != 0) { //is there a block
+                    for (int k = j - 1; k >=0; k--) { //determining whether the blocks are sequential (j and k block)
                         if (field[i][k] == field[i][j]) {
                             field[i][j] += 1;
-                            score += 2<<field[i][j]-1;
+                            score += 2<<field[i][j]-1; //bitwise op.
                             field[i][k] = 0;
-                            j=HEIGHT;
+                            j=HEIGHT; //check again
                         } else if (field[i][k] != 0){
                             break;
                         }
@@ -284,11 +288,12 @@ public class Game {
             }
         }
 
+        //slide down
         for (int i = 1; i < WIDTH + 1; i++) {
             for (int j = HEIGHT - 1; j >= 0; j--) {
                 int down = 0;
                 if (field[i][j] != 0) {
-                    for (int k = j + 1; k < HEIGHT; k++) {
+                    for (int k = j + 1; k < HEIGHT; k++) { //checking the blocks below
                         if (field[i][k] == 0)
                             down++;
                         else
