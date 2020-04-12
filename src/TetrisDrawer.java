@@ -21,7 +21,7 @@ public class TetrisDrawer {
             new Color(231,197,88) //2048
     };
 
-
+    //Draws game background
     public static void drawBackground() {
         StdDraw.setCanvasSize(500,500);
         StdDraw.setXscale(0, 500);
@@ -52,6 +52,7 @@ public class TetrisDrawer {
         StdDraw.text(449, 120,"NEXT");
     }
 
+    //Draws next tetromino piece
     public static void drawNext(int[] nextTetromino) {
         StdDraw.setPenColor(166, 160, 152);
         StdDraw.filledRectangle(449, 70, 40,35);
@@ -74,7 +75,7 @@ public class TetrisDrawer {
         }
     }
 
-
+    //Draws the game itself
     public static void drawGame(int[][] screen) {
         StdDraw.setFont(font);
         for (int i = 1; i < Game.WIDTH+1; i++){
@@ -96,6 +97,7 @@ public class TetrisDrawer {
         }
     }
 
+    //Draws score
     public static void drawScore(int score) {
         //delete the old
         StdDraw.setPenColor(166, 160, 152);
@@ -106,6 +108,7 @@ public class TetrisDrawer {
         StdDraw.text(449, 435, String.valueOf(score));
     }
 
+    //Draws splash screen when game is over
     public static void drawSplashScreen(int score) {
         StdDraw.setPenColor(210,105,30);
         StdDraw.filledRectangle(250,250,110,110);

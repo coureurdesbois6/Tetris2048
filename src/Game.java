@@ -20,27 +20,32 @@ public class Game {
 
     private int[] nextPieceArr = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     private int[] currentPieceArr = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    private int currentPiece = 0;
-    private int currentRotation = 0;
-    private int currentX = WIDTH / 4;
-    private int currentY = 0;
+    private int currentPiece = 0; //Tetromino skeleton in the tetrominoes[][] array by index
+    private int currentRotation = 0; //Current tetromino rotation
+    private int currentX = WIDTH / 4; //Tetromino X
+    private int currentY = 0; //Tetromino Y
 
     private int difficulty = 30; //Unused difficulty variable
     private int tickCount = 0;
-    private boolean rotateHold = false;
+    private boolean rotateHold = false; //Flag to avoid wild rotation (holding down rotate and movement keys)
     private boolean[] keys = new boolean[sysKeys.length]; //R,L,U,D, Enter, Escape
 
+    /**
+     * Starts the game
+     */
     public void start() {
-        StdDraw.enableDoubleBuffering();
-        StdDraw.clear();
-        TetrisDrawer.drawBackground();
+        StdDraw.enableDoubleBuffering(); //Use double buffering to render display after all the calculations
+        StdDraw.clear(); //clear whatever is present on the screen from possible previous game sessions
+        TetrisDrawer.drawBackground(); //Draw the background of the game
 
+        //Ready the initial tetromino and the next one
         int randomNext = (currentPiece + 1 + (int) (Math.random()*6)) % 7;
         currentPieceArr = shuffleTetromino(tetrominoes[currentPiece]);
         nextPieceArr = tetrominoes[randomNext];
         nextPieceArr = shuffleTetromino(nextPieceArr);
         TetrisDrawer.drawNext(nextPieceArr);
 
+        //Set the field array to all zeroes with borders -1 using two loops
         for (int i = 0; i < HEIGHT + 1; i++) {
             field[0][i] = -1;
             field[WIDTH+1][i] = -1;
@@ -53,16 +58,15 @@ public class Game {
             screen[i][HEIGHT] = -1;
         }
 
-
+        //Main game loop
         while (!gameOver) {
-
-
             //INPUT
             for (int i = 0; i < 4; i++) {
                 keys[i] = StdDraw.isKeyPressed(sysKeys[i]);
             }
 
             //TIME
+            //Game "tick" interval set to 50
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
@@ -70,7 +74,7 @@ public class Game {
             }
 
             //LOGIC
-            //force down
+            //If a certain time has passed, force the current tetromino down
             if (tickCount == difficulty) {
                 tickCount = 0;
                 if (doesPieceFit(currentPiece, currentRotation, currentX, currentY + 1))
@@ -126,7 +130,7 @@ public class Game {
                     nextPieceArr = shuffleTetromino(nextPieceArr);
                     TetrisDrawer.drawNext(nextPieceArr);
 
-                    //game over if cant spawn new piece
+                    //game over if cant create new piece at top
                     if (!doesPieceFit(currentPiece, currentRotation, currentX, currentY)) {
                         gameOver = true;
                         break;
@@ -136,6 +140,7 @@ public class Game {
                 tickCount++;
             }
 
+            //Movements mapped to each arrow key
             if (keys[0]) //RIGHT
                 if (doesPieceFit(currentPiece, currentRotation, currentX + 1, currentY))
                     currentX += 1;
@@ -153,14 +158,12 @@ public class Game {
                 if (doesPieceFit(currentPiece, currentRotation, currentX, currentY + 1))
                     currentY += 1;
 
-
             //assign field to screen, ignore borders
             for (int i = 1; i < WIDTH + 1; i++) {
                 for (int j = 0; j < HEIGHT; j++) {
                     screen[i][j] = field[i][j];
                 }
             }
-
 
             //assign piece to screen
             int val = 0;
@@ -179,24 +182,26 @@ public class Game {
             StdDraw.show();
         }
 
-
+        //Splash screen to ask whether to play again or quit
         TetrisDrawer.drawSplashScreen(score);
         StdDraw.show();
 
         while(true) {
-            if (StdDraw.isKeyPressed(sysKeys[4])) {
+            if (StdDraw.isKeyPressed(sysKeys[4])) { //ENTER
                 gameOver = false;
+                //Reset the field, drawing screen and score
                 field = new int[WIDTH + 2][HEIGHT + 1];
                 screen = new int[WIDTH + 2][HEIGHT + 1];
                 score = 0;
                 this.start();
-            } else if (StdDraw.isKeyPressed(sysKeys[5])) {
+            } else if (StdDraw.isKeyPressed(sysKeys[5])) { //ESCAPE
                 System.exit(0);
                 break;
             }
         }
     }
 
+    //Shuffles given tetromino 2d array, setting random parts of 1 to 2
     private int[] shuffleTetromino(int[] next) {
         Random rd = new Random();
         for (int i = 0; i < 4; i++) {
@@ -211,6 +216,7 @@ public class Game {
         return next;
     }
 
+    //Returns the position of a rotated block in a 4 by 4 array
     private int rotate(int x, int y, int rotation) {
         int result = 0;
 
@@ -232,6 +238,7 @@ public class Game {
         return result;
     }
 
+    //Checks whether given piece with rotation and coordinates fits in the game field
     private boolean doesPieceFit(int piece, int rotation, int x, int y) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -244,7 +251,8 @@ public class Game {
         return true;
     }
 
-
+    //2048 logic, merges same numbers on top of each other
+    //and forces every floating block to fall
     private void logic2048() {
         for (int i = 1; i < WIDTH + 1; i++) {
             for (int j = HEIGHT; j >= 0; j--) {
