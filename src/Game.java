@@ -196,6 +196,7 @@ public class Game {
         }
 
         //Splash screen to ask whether to play again or quit
+        TetrisDrawer.drawScore(score);
         TetrisDrawer.drawSplashScreen(score);
         StdDraw.show();
 
