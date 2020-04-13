@@ -59,7 +59,7 @@ public class TetrisDrawer {
     public static void drawNext(int[] nextTetromino) {
 
         //delete where the next block is going to be -> paint with the same color of background
-        StdDraw.setPenColor(166, 160, 152);
+        StdDraw.setPenColor(150, 143, 132);
         StdDraw.filledRectangle(449, 70, 40,35);
 
         for (int i = 0; i < 4; i++) {
@@ -105,7 +105,7 @@ public class TetrisDrawer {
     public static void drawScore(int score) {
 
         //delete the old score
-        StdDraw.setPenColor(166, 160, 152);
+        StdDraw.setPenColor(150, 143, 132);
         StdDraw.filledRectangle(449, 435, 40,20);
 
         StdDraw.setFont(font);
