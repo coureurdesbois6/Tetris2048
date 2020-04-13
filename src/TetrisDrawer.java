@@ -91,7 +91,7 @@ public class TetrisDrawer {
                 //drawing the background
                 StdDraw.setPenColor(130,112,114);
                 StdDraw.filledRectangle(x,y,397.0/Game.WIDTH/2,494.0/Game.HEIGHT/2);
-                StdDraw.setPenColor(colorLevel[screen[i][j]]);
+                StdDraw.setPenColor(colorLevel[screen[i][j] % 11]);
                 StdDraw.filledRectangle(x,y,397.0/Game.WIDTH/2.1,494.0/Game.HEIGHT/2.1);
 
                 if (screen[i][j] != 0)
